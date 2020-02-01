@@ -1,0 +1,103 @@
+*****  Curso Swagger ****
+
+    Links: Swagger Editor - https://editor.swagger.io/
+    
+    - Importando Arquivo para o Java
+        Import --> Maven --> Existing Maven Projects
+
+Curso 2 Swagger 
+    - Aula 2. Configurado a API
+
+        * Configurar o POM.xml com as as dependencys para uso do banco de dados
+            
+            --> Para configuração dos bancos de dados (JPA)
+                <dependency>
+			        <groupId>org.springframework.boot</groupId>
+			        <artifactId>spring-boot-starter-data-jpa</artifactId>
+		        </dependency>
+		
+           -->  (Utilização de banco em memória)
+		        <dependency>
+			        <groupId>org.hsqldb</groupId>
+			        <artifactId>hsqldb</artifactId>
+                </dependency>        
+        *
+        * Configurar o application.properties (src/main/resources)
+
+        
+            #################### datasource ########################
+            spring.datasource.username=bytebank_admin
+            spring.datasource.data-password=bytebank_password
+            spring.jpa.show-sql=true
+            spring.jpa.hibernate.ddl-auto=update
+
+            #################### configuracoes do HSQLDB ########################
+            spring.datasource.url=jdbc:hsqldb:file:./database_in_memory/bytebank_db
+            spring.datasource.driver-class-name=org.hsqldb.jdbcDriver
+            
+            Massa de teste
+                {
+                "id": 4,
+                "titular": "Chico Silva",
+                "cpf": "39622212300",
+                "senha": "senha123",
+                "contas": [
+                    {
+                        "agencia": 8756,
+                        "numero": 4,
+                        "digito": 0,
+                        "saldo": 0.0,
+                        "cliente": null,
+                        "transacoes": null
+                    }
+                ]
+    
+    Aula 8 - swagger parte2: Documentando umka api gerada
+
+        1. Precisamos incluir as dependency do swagger para gerar a documentação
+
+            #################### dependencys - no POM.xml ########################
+                
+                <dependency>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger2</artifactId>
+                    <version>2.7.0</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-swagger-ui</artifactId>
+                    <version>2.7.0</version>
+                </dependency> 
+            #####################################################################
+        
+        2. Criar um pacote e incluir a class de configuração e suas anotações.
+            Pacote: br.com.alura.funcionarios.api.swagger.configuration;
+            Classe: SwaggerConfiguration
+
+            * O select existente na classe auxilia no biuld da documentação interativa 
+             
+            * Docket responsável por gerar a documentação interativa
+             
+            #################### Classe SwaggerConfiguration ####################
+            
+                @Configuration 
+                //    Configurando classe para o swagger no spring
+                @EnableSwagger2
+                //    Ativação das configurações do swagger no contexto.
+
+                public class SwaggerConfiguration {
+        
+                    @Bean
+                    public Docket api() {
+                        return new Docket(DocumentationType.SWAGGER_2)
+                        .select()
+                        .apis(RequestHandlerSelectors.basePackage("br.com.alura.funcionarios.api"))
+                        .build();
+                //      .paths(PathSelectors.any())                    
+                    }
+                }
+
+            #####################################################################
+
+    
